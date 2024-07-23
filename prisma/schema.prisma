@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Contact {
+  id         Int      @id @default(autoincrement()) @db.SmallInt
+  Title      String
+  contactUrl String?
+  iconUrl    String?
+  isUrl      Boolean?
+}
+
+model Education_Exp {
+  id          Int     @id(map: "Education/Exp_pkey") @default(autoincrement()) @db.SmallInt
+  Title       String
+  description String?
+}
+
+model Project {
+  id            Int             @id @default(autoincrement()) @db.SmallInt
+  Title         String?
+  Description   String?
+  webUrl        String?
+  gitUrl        String?
+  ProjectSkills ProjectSkills[]
+}
+
+model ProjectSkills {
+  id         Int     @id @default(autoincrement()) @db.SmallInt
+  skills_id  Int     @db.SmallInt
+  project_id Int     @db.SmallInt
+  Project    Project @relation(fields: [project_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "public_ProjectSkills_project_id_fkey")
+  Skills     Skills  @relation(fields: [skills_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "public_ProjectSkills_skills_id_fkey")
+}
+
+model Skills {
+  id            Int             @id @default(autoincrement()) @db.SmallInt
+  title         String?
+  imageUrl      String?
+  ProjectSkills ProjectSkills[]
+}
